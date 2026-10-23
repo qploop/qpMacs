@@ -44,7 +44,6 @@
     (lambda ()
       (let* ((file-name-handler-alist nil))
     (load_init 'packages.el)
-    (load_init 'folding.el)
     (load_init 'workflow.el)
     (load_init 'workflow-modes.el)
     )))
@@ -77,7 +76,7 @@
  '(custom-safe-themes
    '("f6a9804d857f9b0c75e1045b8aba5bc1b976f69c5369440edce5eb49c9ed16cf" default))
  '(package-selected-packages
-   '(company dumb-jump easysession eldoc-box git-modes ligature mason mode-minder move-text
+   '(company dumb-jump easysession eglot eldoc-box git-modes ligature mason mode-minder move-text
              multiple-cursors occult rainbow-mode rg rust-mode treemacs-icons-dired treemacs-magit
              treemacs-tab-bar treesit-auto treesit-fold))
  '(qp-compile-animation 'loading))

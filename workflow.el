@@ -36,11 +36,17 @@
 
 (global-set-key (kbd "C-z")               'undo)
 (global-set-key (kbd "C-S-z")             'undo-redo)
-(global-set-key (kbd "C-M-<right>")       'next-buffer)
-(global-set-key (kbd "C-M-<left>")        'previous-buffer)
 (global-set-key (kbd "C-<")               'tab-new)
 (global-set-key (kbd "C->")               'tab-close)
 (global-set-key (kbd "C-<print>")         'overwrite-mode)
+
+(global-set-key (kbd "C-S-<left>")        'previous-buffer)
+(global-set-key (kbd "C-S-<right>")       'next-buffer)
+(global-set-key (kbd "C-S-w")             'other-window)
+(global-set-key (kbd "C-S-e")             'split-window-horizontally)
+(global-set-key (kbd "C-S-q")             'split-window-vertically)
+(global-set-key (kbd "C-S-c")             'delete-window)
+
 
 ; Multiple Cursors
 (when (package-installed-p 'multiple-cursors)
@@ -127,11 +133,14 @@
 
 
 (defun qp-exit-buffer-no-prompt()
-  "Kills current buffer without prompting for save."
+  "Kills current buffer without prompting for save. If another window matches, close window."
   (interactive)
   (set-buffer-modified-p nil)
-  (kill-buffer (current-buffer)))
-(global-set-key (kbd "C-x k") #'qp-exit-buffer-no-prompt)
+  (when (kill-buffer (current-buffer))
+    (let ((win (selected-window)))
+      (when (delq win (get-buffer-window-list (window-buffer win) nil nil))
+        (delete-window win)))))
+(global-set-key (kbd "C-c k")  #'qp-exit-buffer-no-prompt)
 
 
 ;=======================================
@@ -418,14 +427,6 @@
 (defalias 'qp-notes 'qp-todo)
 
 
-(defun qp-timestamp()
-  "Inserts timestamp in D-M-Y | H:M"
-  (interactive)
-  (let* ((system-time-locale "C")
-    (day (string-to-number (format-time-string "%d"))))
-    (insert
-       (format-time-string (concat
-         (qp--timestamp-ordinal day) " %B %Y | %H:%Mh")))))
 (defun qp--timestamp-ordinal(n)
     (let
         ((suffix (cond
@@ -435,41 +436,40 @@
             ((= (% n 10) 3) "rd")
             (t "th"))))
         (concat (number-to-string n) suffix)))
+(defun qp-timestamp()
+  "Inserts timestamp in D-M-Y | H:M"
+  (interactive)
+  (let* ((system-time-locale "C")
+    (day (string-to-number (format-time-string "%d"))))
+    (insert
+       (format-time-string (concat
+         (qp--timestamp-ordinal day) " %B %Y | %H:%Mh")))))
 
 
+(defvar qp-print-snippets
+  '((rust-mode            . "println!(\"{}\", VAR);")
+    (python-mode          . "print(VAR)")
+    ((js-mode js-ts-mode typescript-mode typescript-ts-mode tsx-ts-mode)
+                          . "console.log(VAR);")
+    (zig-mode             . "std.debug.print(\"{}\", .{VAR});")
+    (go-mode              . "fmt.Println(VAR)")
+    (c++-mode             . "std::println(\"{}\", VAR);")
+    (ruby-mode            . "cprint VAR")
+    (java-mode            . "System.out.println(VAR);")
+    ((c3-mode c3-ts-mode) . "io::printn(VAR);"))
+  "Print statements.")
 (defun qp-print()
   "Inserts a print statement, focuses cursor on variable name."
   (interactive)
-  (let* ((start (point))
-         (snippet
-          (cond
-           ((derived-mode-p 'rust-mode)
-            "println!(\"{}\", VAR);")
-           ((derived-mode-p 'python-mode)
-            "print(VAR)")
-           ((derived-mode-p 'js-mode 'js-ts-mode 'typescript-mode
-                            'typescript-ts-mode 'tsx-ts-mode)
-            "console.log(VAR);")
-           ((derived-mode-p 'zig-mode)
-            "std.debug.print(\"{}\", .{VAR});")
-           ((derived-mode-p 'go-mode)
-            "fmt.Println(VAR)")
-           ((derived-mode-p 'c++-mode)
-            "std::cout << VAR << std::endl;")
-	   ((derived-mode-p 'ruby-mode)
-	    "cprint VAR")
-           ((derived-mode-p 'java-mode)
-            "System.out.println(VAR);")
-           ((derived-mode-p 'c3-mode 'c3-ts-mode)
-            "io::printn(VAR);")
-           (t
-            "printf(\"%d\\n\", VAR);"))))
-    (insert snippet)
+  (let ((start (point)))
+    (insert (or (cdr (seq-find (lambda (e)
+                                 (apply #'derived-mode-p (ensure-list (car e))))
+                               qp-print-snippets))
+                "printf(\"%d\\n\", VAR);"))
     (goto-char start)
     (search-forward "VAR")))
 
 
-;; Compilation
 ;; https://www.reddit.com/r/emacs/comments/1gmjpn1/comment/lw4kgya/
 (defun user-native-recompile()
   "Prune eln cache and native recompile everything on `package-user-dir'."
@@ -525,6 +525,7 @@
           (_      "")))
     ""))
 (setq-default compile-command '(qp--compile-guesser))
+
 
 
 (provide 'workflow)

@@ -1,5 +1,6 @@
 ;; -*- coding: utf-8; lexical-binding: t; -*-
 
+
 ;; Move Text
 (use-package move-text
   :ensure t
@@ -41,8 +42,8 @@
          ("C-c s l" . easysession-switch-to)))
 
 
-;; EMACS EXPERIMENTAL v31
-;; https://rahuljuliato.com/posts/markdown-ts-mode-emacs-31
+;; ;; EMACS EXPERIMENTAL v31
+;; ;; Markdown Mode  https://rahuljuliato.com/posts/markdown-ts-mode-emacs-31
 ;; (use-package markdown-ts-mode
 ;;   :ensure nil
 ;;   :mode ("\\.md\\'" "\\.mdx\\'" "\\.markdown\\'")
@@ -80,7 +81,9 @@
 
 ;; Package Installer
 (use-package mason
-  :ensure t)
+  :ensure t
+  :config
+  (mason-setup))
 
 
 ;; RipGrep
@@ -89,7 +92,7 @@
   :ensure t)
 
 
-;; Dump-jumb   see end of file ↓
+;; Dump-jumb
 (use-package dumb-jump
   :ensure t)
 
@@ -98,57 +101,6 @@
 (use-package eldoc-box
   :ensure t)
 (global-set-key (kbd "C-c d")               'eldoc-box-help-at-point)
-
-
-;=======================================
-;  Treesitter
-;=======================================
-
-(use-package treesit-fold
-  :ensure t)
-
-(use-package treesit-auto
-  :ensure t
-  :custom
-  (treesit-auto-install t)
-  :config
-  (treesit-auto-add-to-auto-mode-alist 'all)
-  (global-treesit-auto-mode))
-(setq treesit-font-lock-level 4)
-
-(setq treesit-language-source-alist
-      '((bash       "https://github.com/tree-sitter/tree-sitter-bash")
-        (c          "https://github.com/tree-sitter/tree-sitter-c")
-        (c-sharp    "https://github.com/tree-sitter/tree-sitter-c-sharp")
-        (cmake      "https://github.com/uyha/tree-sitter-cmake")
-        (cpp        "https://github.com/tree-sitter/tree-sitter-cpp")
-        (css        "https://github.com/tree-sitter/tree-sitter-css")
-        (dockerfile "https://github.com/camdencheek/tree-sitter-dockerfile")
-        (elisp      "https://github.com/Wilfred/tree-sitter-elisp")
-        (go         "https://github.com/tree-sitter/tree-sitter-go")
-        (gomod      "https://github.com/camdencheek/tree-sitter-go-mod")
-        (html       "https://github.com/tree-sitter/tree-sitter-html")
-        (java       "https://github.com/tree-sitter/tree-sitter-java")
-        (javascript "https://github.com/tree-sitter/tree-sitter-javascript" "master" "src")
-        (json       "https://github.com/tree-sitter/tree-sitter-json")
-        (kotlin     "https://github.com/fwcd/tree-sitter-kotlin")
-        (lua        "https://github.com/tree-sitter-grammars/tree-sitter-lua")
-        (make       "https://github.com/tree-sitter-grammars/tree-sitter-make")
-        (markdown   "https://github.com/tree-sitter-grammars/tree-sitter-markdown" "split_parser" "tree-sitter-markdown/src")
-        (markdown-inline "https://github.com/tree-sitter-grammars/tree-sitter-markdown" "split_parser" "tree-sitter-markdown-inline/src")
-        (php        "https://github.com/tree-sitter/tree-sitter-php" "master" "php/src")
-        (python     "https://github.com/tree-sitter/tree-sitter-python")
-        (ruby       "https://github.com/tree-sitter/tree-sitter-ruby")
-        (rust       "https://github.com/tree-sitter/tree-sitter-rust")
-        (scala      "https://github.com/tree-sitter/tree-sitter-scala")
-        (toml       "https://github.com/tree-sitter-grammars/tree-sitter-toml")
-        (tsx        "https://github.com/tree-sitter/tree-sitter-typescript" "master" "tsx/src")
-        (typescript "https://github.com/tree-sitter/tree-sitter-typescript" "master" "typescript/src")
-        (yaml       "https://github.com/tree-sitter-grammars/tree-sitter-yaml")))
-
-(dolist (lang (mapcar #'car treesit-language-source-alist))
-  (unless (treesit-language-available-p lang)
-    (treesit-install-language-grammar lang)))
 
 
 ;---------------------------------------
@@ -172,6 +124,24 @@
              (xref-backend-definitions
               'dumb-jump (xref-backend-identifier-at-point 'dumb-jump))))))
 (advice-add 'xref-backend-definitions :around #'patch--dumb-eglot)
+
+
+;=======================================
+;  Treesitter
+;=======================================
+
+(setq treesit-font-lock-level 4)
+
+(use-package treesit-fold
+  :ensure t)
+
+(use-package treesit-auto
+  :ensure t
+  :custom
+  (treesit-auto-install t)
+  :config
+  (treesit-auto-add-to-auto-mode-alist 'all)
+  (global-treesit-auto-mode))
 
 
 
