@@ -36,6 +36,8 @@
 
 (global-set-key (kbd "C-z")               'undo)
 (global-set-key (kbd "C-S-z")             'undo-redo)
+(global-set-key (kbd "C-M-<right>")       'next-buffer)
+(global-set-key (kbd "C-M-<left>")        'previous-buffer)
 (global-set-key (kbd "C-<")               'tab-new)
 (global-set-key (kbd "C->")               'tab-close)
 (global-set-key (kbd "C-<print>")         'overwrite-mode)
