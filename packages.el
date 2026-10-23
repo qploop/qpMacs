@@ -80,9 +80,7 @@
 
 ;; Package Installer
 (use-package mason
-  :ensure t
-  :config
-  (mason-setup))
+  :ensure t)
 
 
 ;; RipGrep

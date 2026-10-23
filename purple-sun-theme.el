@@ -167,7 +167,7 @@
 
 ;; Company
   `(company-tooltip           ((t (:foreground, t-ignore     :background, t-bg  ))))
-  `(company-tooltip-common    ((t (:foreground, t-highlight  :background nil  ))))
+  `(company-tooltip-common    ((t (:foreground, t-highlight  :background unspecified  ))))
   `(company-tooltip-selection ((t (:foreground, t-fg         :background, t-bg-2  ))))
   `(company-scrollbar-fg      ((t (:background, t-accent )))) 
   `(company-scrollbar-bg      ((t (:background, t-bg-3   ))))

@@ -3,7 +3,6 @@
 
 ;; Project.el
 (setq project-vc-extra-root-markers '(".project" "package.json" "Cargo.toml" "go.mod"))
-(project-remember-projects-under "~/projects" t)
 
 ;=======================================
 ;  Shortcuts
