@@ -1,8 +1,19 @@
-
 ;; -*- coding: utf-8; lexical-binding: t; -*-
 
 ;; Project.el
 (setq project-vc-extra-root-markers '(".project" "package.json" "Cargo.toml" "go.mod"))
+
+;; Dired
+(defun qp-dired()
+  "Dired in with details hidden on right split window."
+  (interactive)
+  (let ((dir (or (and buffer-file-name (file-name-directory buffer-file-name))
+                 default-directory)))
+    (select-window (split-window-right))
+    (dired dir)
+    (dired-hide-details-mode 1)))
+(global-set-key (kbd "C-c TAB") #'qp-dired)
+
 
 ;=======================================
 ;  Shortcuts
