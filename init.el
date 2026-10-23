@@ -80,7 +80,7 @@
    '(company dumb-jump easysession eldoc-box git-modes ligature mason mode-minder move-text
              multiple-cursors occult rainbow-mode rg rust-mode treemacs-icons-dired treemacs-magit
              treemacs-tab-bar treesit-auto treesit-fold))
- '(qp-compile-animation 'pacman))
+ '(qp-compile-animation 'loading))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
