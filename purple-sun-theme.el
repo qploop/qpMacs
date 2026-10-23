@@ -225,7 +225,9 @@
   `(eldoc-box-border             ((t (:background, t-accent ))))
   `(eldoc-box-body               ((t (:background, t-bg-2  :foreground, t-fg   ))))
   `(eldoc-box-markdown-separator ((t (:foreground, t-highlight   ))))
-  
+
+;; Header Line
+  `(header-line ((t (:foreground, t-fg  :background, t-bg-1  ))))
 
 ;; end custom faces
 )
