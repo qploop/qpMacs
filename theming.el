@@ -42,11 +42,11 @@
 ; Compile Animation
 
 (defcustom qp-compile-animation-presets
-  '((loading   . ["▰▱▱▱" "▱▰▱▱" "▱▱▰▱" "▱▱▱▰" "▱▱▰▱" "▱▰▱▱"])
+  '((loading   . ["▰▱▱▱" "▱▰▱▱" "▱▱▰▱" "▱▱▱▰"])
     (braille   . ["⠋" "⠙" "⠹" "⠸" "⠼" "⠴" "⠦" "⠧" "⠇" "⠏"])
     (moon      . ["🌑" "🌒" "🌓" "🌔" "🌕" "🌖" "🌗" "🌘"])
-    (raining   . ["' ☂ ." "| ☂' " " .☂| " ". ☂ !" " `☂. " "| ☂' "])
-    (pacman    . ["ᗧ·····" "·ᗧ····" "··ᗧ···" "···ᗧ··" "····ᗧ·"  "·····ᗧ"])
+    (raining   . ["`' ☂ .|"  ".| ☂' ."  "' .☂| `"  "|. ☂ '."  "'| ☂`.'"  ". `☂| |"])
+    (pacman    . ["ᗧ·····" " ᗧ····" "  ᗧ···" "   ᗧ··" "    ᗧ·"  "     ᗧ"])
    )
   "Named animation presets for the compilation indicator."
   :type '(alist :key-type symbol :value-type (vector string))
