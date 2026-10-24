@@ -76,10 +76,11 @@
  '(custom-safe-themes
    '("f6a9804d857f9b0c75e1045b8aba5bc1b976f69c5369440edce5eb49c9ed16cf" default))
  '(package-selected-packages
-   '(company dumb-jump easysession eglot eldoc-box git-modes ligature mason mode-minder move-text
-             multiple-cursors occult rainbow-mode rg rust-mode treemacs-icons-dired treemacs-magit
-             treemacs-tab-bar treesit-auto treesit-fold))
- '(qp-compile-animation 'loading))
+   '(all-the-icons all-the-icons-dired company dired-preview dumb-jump easysession eldoc-box git-modes
+                   ligature magit mason move-text multiple-cursors nerd-icons nerd-icons-dired
+                   rainbow-mode rg rust-mode treesit-auto treesit-fold))
+ '(qp-compile-animation 'pacman)
+ '(qp-compile-rotation t))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

@@ -84,7 +84,7 @@
 ;; Common
   `(default        ((t (:background, t-bg     :foreground, t-fg  ))))
   `(fringe         ((t (:background, t-bg        ))))
-  `(cursor         ((t (:background, t-highlight ))))
+  `(cursor         ((t (:background, t-highlight  :foreground, t-bg  ))))
   `(match          ((t (:background, t-bg-3   :foreground, t-highlight  ))))
   `(highlight      ((t (:background, t-bg-3   :foreground, t-highlight  ))))
   `(lazy-highlight ((t (:background, t-bg-3   :foreground, t-highlight  ))))
@@ -179,8 +179,8 @@
 
 ;; Treemacs
   `(treemacs-root-face                ((t (:foreground, t-highlight  :weight bold  :underline t  :height 140))))
-  `(treemacs-directory-face           ((t (:foreground, t-ignore   ))))  
-  `(treemacs-directory-collapsed-face ((t (:foreground, t-ignore   ))))
+  `(treemacs-directory-face           ((t (:foreground, t-fg-1   ))))  
+  `(treemacs-directory-collapsed-face ((t (:foreground, t-fg-1   ))))
   `(treemacs-git-unmodified-face      ((t (:foreground, t-fg       ))))
   `(treemacs-git-modified-face        ((t (:foreground, t-accent  :underline t  ))))
   `(treemacs-git-renamed-face         ((t (:foreground, t-accent   ))))
@@ -228,6 +228,14 @@
 
 ;; Header Line
   `(header-line ((t (:foreground, t-fg  :background, t-bg-1  ))))
+
+;; Speedbar
+  `(speedbar-file-face      ((t (:foreground, t-fg    ))))
+  `(speedbar-directory-face ((t (:foreground, t-fg-1  ))))
+  `(speedbar-tag-face       ((t (:foreground, t-highlight  ))))
+  `(speedbar-highlight-face ((t (:background, t-highlight  :foreground, t-bg  ))))
+  `(speedbar-selected-face  ((t (:background, t-accent  ))))
+  `(speedbar-separator-face ((t (:background, t-accent  ))))
 
 ;; end custom faces
 )

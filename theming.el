@@ -48,7 +48,7 @@
     (raining   . ["`' ☂ .|"  ".| ☂' ."  "' .☂| `"  "|. ☂ '."  "'| ☂`.'"  ". `☂| |"])
     (pacman    . ["ᗧ·····" " ᗧ····" "  ᗧ···" "   ᗧ··" "    ᗧ·"  "     ᗧ"])
    )
-  "Named animation presets for the compilation indicator."
+  "String animations to play during compilation."
   :type '(alist :key-type symbol :value-type (vector string))
   :group 'mode-line)
 
@@ -57,29 +57,33 @@
   :type 'number
   :group 'mode-line)
 
-(defvar qp--compile-frames (alist-get 'loading qp-compile-animation-presets) "Active animation frames for the compilation indicator.")
-(defvar qp--compile-frame 0)
-(defvar qp--compile-timer nil)
+(defcustom qp-compile-rotation t
+  "When true, cycles through the animations after compile finishes."
+  :type 'boolean
+  :group 'mode-line)
 
-(defun qp--compile-apply-animation (symbol value)
+(defvar qp--compile-frames (alist-get 'loading qp-compile-animation-presets) "Active animation frames.")
+(defvar qp--compile-frame 0    "Index of the current frame.")
+(defvar qp--compile-timer nil  "Timer...")
+
+(defun qp--compile-apply-animation(symbol value)
   (set-default symbol value)
   (let ((frames (if (symbolp value)
                     (alist-get value qp-compile-animation-presets)
                   (vconcat value))))
-    (setq qp--compile-frames
-          (if (and frames (> (length frames) 0))
-              frames
-            (alist-get 'loading qp-compile-animation-presets))))
-  (setq qp--compile-frame 0))
+    (setq qp--compile-frames (if (> (length frames) 0)
+                                 frames
+                               (alist-get 'loading qp-compile-animation-presets))
+          qp--compile-frame 0)))
 
 (defcustom qp-compile-animation 'loading
-  "Active compile animation."
+  "Active animation."
   :type '(choice (symbol :tag "Preset name")
                  (repeat :tag "Custom frames" string))
   :set #'qp--compile-apply-animation
   :group 'mode-line)
 
-(defun qp-config-compile-animation (animation)
+(defun qp-config-compile-animation(animation)
   (interactive
    (list (intern (completing-read "Animation: "
                                   (mapcar (lambda (p) (symbol-name (car p)))
@@ -87,82 +91,67 @@
                                   nil t))))
   (customize-save-variable 'qp-compile-animation animation))
 
-(defun qp--compile-glyph()
+(defun qp-config-compile-rotation(rotate)
+  (interactive
+   (list (y-or-n-p "Rotate animation after each compilation? ")))
+  (customize-save-variable 'qp-compile-rotation rotate))
+
+(defun qp--compile-string()
   (if (bound-and-true-p compilation-in-progress)
       (aref qp--compile-frames (mod qp--compile-frame (length qp--compile-frames)))
     ""))
-
-(defun qp--compile-rotate()
-  "Advance `qp-compile-animation' to the next preset, wrapping around."
-  (let* ((keys (mapcar #'car qp-compile-animation-presets)))
-    (when keys
-      (let* ((n (length keys))
-             (idx (let ((i 0) (found nil))
-                    (while (and (null found) (< i n))
-                      (when (eq qp-compile-animation (nth i keys))
-                        (setq found i))
-                      (setq i (1+ i)))
-                    found))
-             (next (nth (mod (1+ (or idx -1)) n) keys)))
-        (qp--compile-apply-animation 'qp-compile-animation next)))))
 
 (defun qp--compile-stop()
   (when qp--compile-timer
     (cancel-timer qp--compile-timer)
     (setq qp--compile-timer nil))
+  (when qp-compile-rotation
+    (when-let* ((keys (mapcar #'car qp-compile-animation-presets))
+                (idx  (or (seq-position keys qp-compile-animation) -1)))
+      (qp--compile-apply-animation 'qp-compile-animation
+                                   (nth (mod (1+ idx) (length keys)) keys))))
   (setq qp--compile-frame 0)
-  (qp--compile-rotate)
   (force-mode-line-update t))
 
 (defun qp--compile-tick()
   (if (bound-and-true-p compilation-in-progress)
       (progn
-        (setq qp--compile-frame
-              (mod (1+ qp--compile-frame) (length qp--compile-frames)))
+        (setq qp--compile-frame (mod (1+ qp--compile-frame) (length qp--compile-frames)))
         (force-mode-line-update t))
     (qp--compile-stop)))
 
 (defun qp--compile-start(&rest _)
   (unless qp--compile-timer
     (setq qp--compile-timer
-          (run-with-timer qp-compile-interval qp-compile-interval
-                          #'qp--compile-tick))))
-
+          (run-with-timer qp-compile-interval qp-compile-interval #'qp--compile-tick))))
 (add-hook 'compilation-start-hook #'qp--compile-start)
 
 
 ;---------------------------------------
 ; Glyphs
-; https://unicodes.jessetane.com/    ☂  ꕤ  ꗃ
+; https://unicodes.jessetane.com/
 
 (defun qp--state-glyph()
-  (cond ((derived-mode-p 'dired-mode 'wdired-mode) "")
+  "Symbol denoting whether we should be typing or not."
+  (cond ((derived-mode-p 'wdired-mode) " ✎")
+        ((derived-mode-p 'dired-mode) " ▤")
+        ((derived-mode-p 'magit-mode) " 🖧")
         ((eq major-mode 'compilation-mode)
          (if compilation-in-progress "" " ☘"))
-        (buffer-read-only " ꕤ")
+        (buffer-read-only " 👁")
         ((qp--locked-by-other-p) " ꗃ")
-        ((and (buffer-base-buffer) (buffer-modified-p)) " ⎇")
+        ((and (buffer-base-buffer) (buffer-modified-p)) " Δ")
         ((buffer-modified-p) " ✦")
         (t " ✧")))
 
-(defun qp--dired-glyph()
-  (cond ((derived-mode-p 'wdired-mode) "✎")
-        ((derived-mode-p 'dired-mode)  "▤")
-        (t "")))
-
-(defun qp--eglot-glyph()
-  (if (and (fboundp 'eglot-managed-p) (eglot-managed-p)) "⧉" ""))
-
-(defun qp--treesit-glyph()
-  (if (and (fboundp 'treesit-parser-list) (treesit-parser-list)) "⋔" ""))
-
 (defun qp--extra-glyphs()
-  "Inserted alongside state glyph."
-  (let ((glyphs (seq-remove #'string-empty-p
-                            (list (qp--compile-glyph)
-                                  (qp--eglot-glyph)
-                                  (qp--treesit-glyph)
-                                  (qp--dired-glyph)))))
+  "Extra smbols for tools and modes, inserted alongside the state."
+  (let ((glyphs (seq-filter
+                 (lambda (g) (and g (not (string-empty-p g))))
+                 (list (qp--compile-string)
+                       (and (fboundp 'eglot-managed-p) (eglot-managed-p) "⏻")
+                       (and (bound-and-true-p rainbow-mode) "🌈︎")
+                       (and (fboundp 'treesit-parser-list) (treesit-parser-list) "♧")))))
     (if glyphs (concat " " (string-join glyphs " ")) "")))
 
 ;---------------------------------------
@@ -198,7 +187,6 @@
   :group 'faces)
 
 (defun qp-font-apply (saved-font &optional save)
-  "Applies and saves font choice."
   (let ((custom-font (cdr (assq saved-font qp-fonts))))
     (unless (and custom-font (find-font (font-spec :name (plist-get custom-font :font))))
       (setq saved-font (caar qp-fonts)
@@ -218,7 +206,7 @@
     (qp-font-apply next t)))
 
 (defun qp-config-set-font()
-  "Prompt for fonts present in `qp-fonts'"
+  "Sets a font from `qp-fonts'"
   (interactive)
   (let ((choice (minibuffer-with-setup-hook #'minibuffer-completion-help
                   (completing-read

@@ -1,13 +1,38 @@
 ;;; workflow-modes.el  -*- lexical-binding: t; -*-
 
 (define-minor-mode qp-mode
-  "Enables `qp-keywords-mode' and `qp-electric-mode'"
+  "Enables `qp-keywords-mode', `qp-dired-mode' , `qp-electric-mode'"
   :lighter " qp"
   (let ((arg (if qp-mode 1 -1)))
     (qp-keywords-mode arg)
-    (qp-electric-mode arg)))
-
+    (qp-electric-mode arg)
+    (qp-dired-mode    arg)
+))
 (global-set-key (kbd "C-c qp")  'qp-mode)
+
+;=======================================
+;  Dired
+;=======================================
+
+(define-minor-mode qp-dired-mode
+  "Establishes a tidy version of dired."
+  :init-value nil
+  (if qp-dired-mode
+      (if (not (derived-mode-p 'dired-mode))
+          (progn
+            (setq qp-dired-mode nil)
+            (when (called-interactively-p 'any)
+              (user-error "qp-dired-mode only works in Dired buffers")))
+        (setq-local dired-kill-when-opening-new-dired-buffer t)
+        (setq-local delete-by-moving-to-trash t)
+        (setq-local dired-isearch-filenames 'dwim)
+        (dired-hide-details-mode 1))
+    ;; Disable when off
+    (kill-local-variable 'dired-kill-when-opening-new-dired-buffer)
+    (kill-local-variable 'delete-by-moving-to-trash)
+    (kill-local-variable 'dired-isearch-filenames)
+    (dired-hide-details-mode -1)))
+(add-hook 'dired-mode-hook #'qp-dired-mode)
 
 ;==================================================
 ;  Highlighting

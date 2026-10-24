@@ -1,11 +1,24 @@
 ;; -*- coding: utf-8; lexical-binding: t; -*-
 
+;; Icons
+(use-package nerd-icons
+  :ensure t)
+(use-package nerd-icons-dired
+  :ensure t
+  :hook (dired-mode . nerd-icons-dired-mode))
+(setopt magit-format-file-function #'magit-format-file-nerd-icons)
+
 
 ;; Move Text
 (use-package move-text
   :ensure t
   :config
   (move-text-default-bindings))    ; Alt + ↑ || Alt + ↓
+
+
+;; Rainbow Mode
+(use-package rainbow-mode
+  :ensure t)
 
 
 ;; Multiple Cursors
@@ -18,21 +31,6 @@
   :ensure t)
 (use-package git-modes
   :ensure t)
-
-
-;; Treemacs
-(use-package treemacs
-  :ensure t)
-(use-package treemacs-magit
-  :after (treemacs magit)
-  :ensure t)
-(use-package treemacs-tab-bar
-  :after treemacs
-  :ensure t)
-(use-package treemacs-icons-dired
-  :ensure t
-  :after (treemacs dired)
-  :hook (dired-mode . treemacs-icons-dired-enable-once))
 
 
 ;; EasySession
@@ -68,11 +66,6 @@
   (company-minimum-prefix-length 2))
 
 
-;; Rainbow Mode
-(use-package rainbow-mode
-  :ensure t)
-
-
 ;==============================
 ;  LSP and Documentation
 ;==============================
@@ -104,7 +97,7 @@
 
 
 ;---------------------------------------
-; Dumb-jump eglot patch
+; Dumb-Jump Eglot patch
 ;   Using Eglot, xref overwrites dumb-jump and can sometimes fail to catch a definition
 ;   Under these circumstances, we need to dumb eglot down
 ;   eglot-stay-out-of   might also work   
@@ -138,10 +131,10 @@
 (use-package treesit-auto
   :ensure t
   :custom
-  (treesit-auto-install t)
+  (treesit-auto-install 'prompt)
   :config
   (treesit-auto-add-to-auto-mode-alist 'all)
-  (global-treesit-auto-mode))
+  (global-treesit-auto-mode t))
 
 
 

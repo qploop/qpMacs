@@ -4,14 +4,13 @@
 (setq project-vc-extra-root-markers '(".project" "package.json" "Cargo.toml" "go.mod"))
 
 ;; Dired
-(defun qp-dired()
-  "Dired in with details hidden on right split window."
+(defun qp-dired ()
+  "Opens dired on a separate window."
   (interactive)
   (let ((dir (or (and buffer-file-name (file-name-directory buffer-file-name))
                  default-directory)))
     (select-window (split-window-right))
-    (dired dir)
-    (dired-hide-details-mode 1)))
+    (dired dir)))
 (global-set-key (kbd "C-c TAB") #'qp-dired)
 
 
@@ -60,9 +59,9 @@
     (global-set-key (kbd "C-c m s")       'magit-status)
     (global-set-key (kbd "C-c m l")       'magit-log))
 
-; TreeMacs
-(when (package-installed-p 'treemacs)
-    (global-set-key (kbd "M-o")           'treemacs))
+; Dirvish
+(when (package-installed-p 'dirvish)
+    (global-set-key (kbd "M-o")           'dirvish))
 
 
 ;=======================================
