@@ -137,6 +137,14 @@
   (global-treesit-auto-mode t))
 
 
+;=======================================
+;  Formatter
+;=======================================
+
+(use-package format-all
+  :ensure t)
+
+
 
 (provide 'packages)
 ;;; packages.el ends here

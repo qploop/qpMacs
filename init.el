@@ -76,9 +76,9 @@
  '(custom-safe-themes
    '("f6a9804d857f9b0c75e1045b8aba5bc1b976f69c5369440edce5eb49c9ed16cf" default))
  '(package-selected-packages
-   '(all-the-icons all-the-icons-dired company dired-preview dumb-jump easysession eldoc-box git-modes
-                   ligature magit mason move-text multiple-cursors nerd-icons nerd-icons-dired
-                   rainbow-mode rg rust-mode treesit-auto treesit-fold))
+   '(all-the-icons all-the-icons-dired company dired-preview dumb-jump easysession eldoc-box format-all
+                   git-modes ligature magit mason move-text multiple-cursors nerd-icons
+                   nerd-icons-dired rainbow-mode rg rust-mode treesit-auto treesit-fold))
  '(qp-compile-animation 'pacman)
  '(qp-compile-rotation t))
 (custom-set-faces
