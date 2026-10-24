@@ -8,7 +8,6 @@
 ;        ux.el    Minor modes and window variables                                        ;
 ;   theming.el    Sets the theme, font, and modifies UI elements like the mode line       ;
 ;  packages.el    Tells Emacs what packages to download and install                       ;
-;   folding.el    Custom solutions for code folding                                       ;
 ;  workflow.el    Shortcuts and functions                                                 ;
 ;   \-modes.el    Custom minor modes                                                      ;
 ;=========================================================================================;
